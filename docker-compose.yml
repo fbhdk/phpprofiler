@@ -1,0 +1,63 @@
+version: '3'
+services:
+
+  # Container for running webgrind
+  webgrind:
+    image: wodby/webgrind:1.8
+    ports:
+      - '9991:8080'
+    environment:
+      WEBGRIND_STORAGE_DIR: '/tmp'
+      WEBGRIND_PROFILER_DIR: '/tmp'
+      WEBGRIND_DEFAULT_TIMEZONE: 'Europe/Copenhagen'
+    volumes:
+      - ./webgrind-files:/tmp
+    restart: "no"
+
+  
+  # Container for providing MySQL database
+  # We will use Percona
+  mysqldb:
+    image: percona:8-centos
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqldb
+      MYSQL_DATABASE: mysqldb
+      MYSQL_USER: mysqldb
+      MYSQL_PASSWORD: mysqldb
+    ports:
+      - '9992:3306'
+    volumes:
+       - percona:/var/lib/mysql
+    restart: "no"
+
+  # Container for executing PHP.
+  # We define a build location for this as we need some extra stuff
+  phpfpm:
+    build: phpfpm/
+    volumes:
+      - ./web:/web
+      - ./phpfpm/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./webgrind-files:/tmp
+    restart: "no"
+
+  # nginx webserver for presenting the content
+  nginx:
+    image: nginx:latest
+    ports:
+      - '9993:80'
+    volumes:
+      - ./web:/web
+      - ./nginx:/etc/nginx/conf.d
+    restart: "no"
+
+  # phpMyAdmin should you need to manage the database
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+     - '9994:80'
+    links:
+      - "mysqldb:db"
+
+volumes:
+  percona:
