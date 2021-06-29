@@ -4,10 +4,11 @@ Simple dockerized setup for profiling a PHP application
 
 ## Getting started
 
-Start by cloning this repository
+Start by cloning this repository and setting permissions for the `webgrind-files` directory. We will use 777 as this is merely for testing purposes.
 ```
 git clone https://github.com/fbhdk/phpprofiler.git
 cd phpprofiler
+chmod 777 webgrind-files
 docker-compose up
 ```
 
