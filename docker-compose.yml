@@ -3,7 +3,7 @@ services:
 
   # Container for running webgrind
   webgrind:
-    image: wodby/webgrind:1.8
+    image: wodby/webgrind:1.9
     ports:
       - '9991:8080'
     environment:
@@ -18,7 +18,7 @@ services:
   # Container for providing MySQL database
   # We will use Percona
   mysqldb:
-    image: percona:8-centos
+    image: mysql:8
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: mysqldb

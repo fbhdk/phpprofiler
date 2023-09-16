@@ -1,4 +1,4 @@
-FROM  php:7-fpm
+FROM php:8-fpm
 
 RUN apt -yqq update && apt install -y zlib1g-dev libicu-dev g++ 
 
